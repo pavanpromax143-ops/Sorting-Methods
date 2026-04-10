@@ -1,107 +1,98 @@
+
 import java.util.*;
 
 public class Solution {
 
     // ---------------- Linear Search ----------------
-    public static void linearSearch(String[] logs, String target) {
-        int first = -1, last = -1;
+    public static void linearSearch(int[] arr, int target) {
         int comparisons = 0;
+        boolean found = false;
 
-        for (int i = 0; i < logs.length; i++) {
+        for (int i = 0; i < arr.length; i++) {
             comparisons++;
-            if (logs[i].equals(target)) {
-                if (first == -1) first = i;
-                last = i;
+            if (arr[i] == target) {
+                System.out.println("Linear Search: Found at index " + i);
+                found = true;
+                break;
             }
         }
 
-        System.out.println("Linear Search:");
-        if (first != -1) {
-            System.out.println("First occurrence at index: " + first);
-            System.out.println("Last occurrence at index: " + last);
-        } else {
-            System.out.println("Account not found");
-        }
+        if (!found)
+            System.out.println("Linear Search: Threshold not found");
+
         System.out.println("Comparisons: " + comparisons);
     }
 
-    // ---------------- Binary Search ----------------
-    public static void binarySearch(String[] logs, String target) {
-        int low = 0, high = logs.length - 1;
+    // ---------------- Binary Search: Floor & Ceiling ----------------
+    public static void binaryFloorCeiling(int[] arr, int target) {
+        int low = 0, high = arr.length - 1;
+        int floor = -1, ceiling = -1;
         int comparisons = 0;
-        int index = -1;
 
         while (low <= high) {
             int mid = (low + high) / 2;
             comparisons++;
 
-            int cmp = logs[mid].compareTo(target);
-
-            if (cmp == 0) {
-                index = mid;
+            if (arr[mid] == target) {
+                floor = ceiling = arr[mid];
                 break;
-            } else if (cmp < 0) {
+            }
+            else if (arr[mid] < target) {
+                floor = arr[mid];
                 low = mid + 1;
-            } else {
+            }
+            else {
+                ceiling = arr[mid];
                 high = mid - 1;
             }
         }
 
         System.out.println("\nBinary Search:");
+        System.out.println("Floor value: " + (floor == -1 ? "None" : floor));
+        System.out.println("Ceiling value: " + (ceiling == -1 ? "None" : ceiling));
+        System.out.println("Comparisons: " + comparisons);
+    }
 
-        if (index == -1) {
-            System.out.println("Account not found");
-            System.out.println("Comparisons: " + comparisons);
-            return;
-        }
+    // ---------------- Binary Search: Insertion Point ----------------
+    public static void findInsertionPoint(int[] arr, int target) {
+        int low = 0, high = arr.length;
+        int comparisons = 0;
 
-        // Count occurrences (expand left and right)
-        int count = 1;
-        int left = index - 1;
-        int right = index + 1;
-
-        while (left >= 0 && logs[left].equals(target)) {
+        while (low < high) {
+            int mid = (low + high) / 2;
             comparisons++;
-            count++;
-            left--;
+
+            if (arr[mid] < target)
+                low = mid + 1;
+            else
+                high = mid;
         }
 
-        while (right < logs.length && logs[right].equals(target)) {
-            comparisons++;
-            count++;
-            right++;
-        }
-
-        System.out.println("One occurrence at index: " + index);
-        System.out.println("Total occurrences: " + count);
+        System.out.println("Insertion point for " + target + " is index: " + low);
         System.out.println("Comparisons: " + comparisons);
     }
 
     // ---------------- Utility Print ----------------
-    public static void printArray(String[] arr) {
-        for (String s : arr)
-            System.out.print(s + " ");
-        System.out.println();
+    public static void printArray(int[] arr) {
+        System.out.println(Arrays.toString(arr));
     }
 
     // ---------------- Main Method ----------------
     public static void main(String[] args) {
 
-        String[] logs = {"accB", "accA", "accB", "accC"};
+        int[] risks = {10, 25, 50, 100};
+        int threshold = 30;
 
-        System.out.println("Original Logs:");
-        printArray(logs);
+        System.out.println("Sorted Risk Bands:");
+        printArray(risks);
 
-        // Linear search on unsorted data
-        linearSearch(logs, "accB");
+        // Linear search (works on unsorted too)
+        linearSearch(risks, threshold);
 
-        // Sort logs for binary search
-        Arrays.sort(logs);
+        // Binary search floor & ceiling
+        binaryFloorCeiling(risks, threshold);
 
-        System.out.println("\nSorted Logs:");
-        printArray(logs);
-
-        // Binary search on sorted data
-        binarySearch(logs, "accB");
+        // Binary insertion point
+        findInsertionPoint(risks, threshold);
     }
 }
