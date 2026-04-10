@@ -1,3 +1,4 @@
+
 import java.util.*;
 
 public class Solution {
@@ -146,8 +147,8 @@ public class Solution {
     public static void main(String[] args) {
 
         Trade[] trades = {
-                new Trade("trade3", 500),
-                new Trade("trade1", 100),
+                new Trade("trade3  ", 500),
+                new Trade("trade1"  , 100),
                 new Trade("trade2", 300)
         };
 
